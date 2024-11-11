@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись на прием</title>
+    <link rel="stylesheet" href="stylesheet.css"> <!-- Подключаем файл стилей -->
+</head>
+<body>
+
+<h2>Запишите на прием своего любимца</h2>
+<form id="appointmentForm">
+    <label for="surname">Фамилия:</label>
+    <input type="text" id="surname" name="surname" required>
+
+    <label for="name">Имя:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="patronymic">Отчество:</label>
+    <input type="text" id="patronymic" name="patronymic" required>
+
+    <label for="pet_name">Имя питомца:</label>
+    <input type="text" id="pet_name" name="pet_name" required>
+
+    <label for="pet_breed">Порода питомца:</label>
+    <input type="text" id="pet_breed" name="pet_breed" required>
+
+    <label for="appointment_date">Дата приема:</label>
+    <input type="date" id="appointment_date" name="appointment_date" required>
+
+    <input type="submit" value="Записаться">
+</form>
+
+<script>
+    document.getElementById('appointmentForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Предотвращаем стандартное поведение формы
+
+        // Проверка заполненности полей
+        const surname = document.getElementById('surname').value;
+        const name = document.getElementById('name').value;
+        const patronymic = document.getElementById('patronymic').value;
+        const petName = document.getElementById('pet_name').value;
+        const petBreed = document.getElementById('pet_breed').value;
+        const appointmentDate = document.getElementById('appointment_date').value;
+
+        if (surname.trim() === '' || name.trim() === '' || patronymic.trim() === '' || petName.trim() === '' || petBreed.trim() === '' || appointmentDate === '') {
+            alert('Пожалуйста, заполните все поля и выберите дату приема.');
+            return;
+        }
+
+        // Отправка данных на сервер
+        const formData = new FormData(event.target);
+        fetch('/new_entry', {
+            method: 'POST',
+            body: new URLSearchParams(formData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = 'page2.html';
+                } else {
+                    alert('Произошла ошибка при записи на прием.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при записи на прием.');
+            });
+    });
+</script>
+</body>
+</html>
